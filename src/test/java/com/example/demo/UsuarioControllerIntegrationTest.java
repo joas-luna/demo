@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.models.dto.UsuarioDTO;
+import com.example.demo.models.entities.Usuario;
 import com.example.demo.repositories.UsuarioRepository;
 import com.example.demo.services.UsuarioService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,14 @@ class UsuarioControllerIntegrationTest {
         novoUsuario.setNome("Maria Silva");
         novoUsuario.setEmail(email);
 
-        Usuario criado = usuarioService.criar(novoUsuario);
+        UsuarioDTO novoUsuarioDTO = new UsuarioDTO(
+                novoUsuario.getNome(),
+                novoUsuario.getEmail(),
+                novoUsuario.getSenha(),
+                novoUsuario.getPais()
+        );
+
+        Usuario criado = usuarioService.criaUsuario(novoUsuarioDTO);
         Usuario encontrado = usuarioService.buscarPorId(criado.getId());
 
         Usuario dadosAtualizacao = new Usuario();
@@ -64,8 +73,15 @@ class UsuarioControllerIntegrationTest {
         duplicado.setNome("Joao 2");
         duplicado.setEmail("joao@demo.com");
 
+        UsuarioDTO usuarioDTODuplicado = new UsuarioDTO(
+                duplicado.getNome(),
+                duplicado.getEmail(),
+                duplicado.getSenha(),
+                duplicado.getPais()
+        );
+
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
-                () -> usuarioService.criar(duplicado));
+                () -> usuarioService.criaUsuario(usuarioDTODuplicado));
         assertEquals(409, ex.getStatusCode().value());
     }
 }

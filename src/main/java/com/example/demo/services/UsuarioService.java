@@ -28,4 +28,14 @@ public class UsuarioService {
     public List<Usuario> listarUsuarios() {
         return usuarioRepository.findAll();
     }
+
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepository.getReferenceById(id);
+    }
+
+//    public Usuario atualizar(Long id, Usuario dadosAtualizacao) {}
+
+    public void remover(Long id) {
+        usuarioRepository.deleteById(id);
+    }
 }
