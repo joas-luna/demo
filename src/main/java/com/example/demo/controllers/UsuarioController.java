@@ -39,7 +39,11 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUsuario(@PathVariable Long id) {
-        return ResponseEntity.status(200).body(usuarioService.buscarPorId(id));
+        try {
+            return ResponseEntity.status(200).body(usuarioService.buscarPorId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -47,22 +51,21 @@ public class UsuarioController {
             @PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO
     )
     {
-        usuarioService.buscarPorId(id).setEmail(usuarioDTO.getEmail());
-        usuarioService.buscarPorId(id).setEmail(usuarioDTO.getNome());
-        usuarioService.buscarPorId(id).setEmail(usuarioDTO.getSenha());
-        usuarioService.buscarPorId(id).setEmail(usuarioDTO.getPais());
-
-        return ResponseEntity.status(200).body(usuarioService.buscarPorId(id));
+        try {
+            usuarioService.atualizarUsuario(id, usuarioDTO);
+            return ResponseEntity.status(200).body(usuarioService.buscarPorId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<?> modificarParcialmenteUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
-//        return ResponseEntity.status(200).body();
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> apagarUsuario(@PathVariable Long id) {
-        usuarioService.remover(id);
-        return ResponseEntity.noContent().build();
+        try {
+            usuarioService.remover(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }

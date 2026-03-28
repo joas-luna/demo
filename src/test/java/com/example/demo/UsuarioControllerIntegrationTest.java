@@ -50,7 +50,7 @@ class UsuarioControllerIntegrationTest {
         Usuario dadosAtualizacao = new Usuario();
         dadosAtualizacao.setNome("Maria Souza");
         dadosAtualizacao.setEmail(email);
-        Usuario atualizado = usuarioService.atualizar(criado.getId(), dadosAtualizacao);
+        Usuario atualizado = usuarioService.atualizarUsuario(criado.getId(), dadosAtualizacao);
 
         assertEquals("Maria Silva", encontrado.getNome());
         assertEquals("Maria Souza", atualizado.getNome());
