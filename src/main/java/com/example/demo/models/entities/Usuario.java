@@ -1,5 +1,6 @@
 package com.example.demo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,10 @@ public class Usuario {
     private String email;
     private String senha;
     private String pais;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Endereco endereco;
 
     public Usuario(String nome, String email, String senha, String pais){
         this.nome = nome;
