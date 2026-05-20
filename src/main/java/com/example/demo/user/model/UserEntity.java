@@ -1,22 +1,20 @@
-package com.example.demo.models.entities;
-
+package com.example.demo.user.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
-@Table(name = "pets")
-@Getter
+@Table(name = "users")
 @Setter
+@Getter
 @NoArgsConstructor
-public class Pet {
+@AllArgsConstructor
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String nome;
-    private int idade;
-    private Long donoId;
 }
