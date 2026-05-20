@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "usuarios")
 @Getter
@@ -21,8 +23,10 @@ public class Usuario {
     private String pais;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Endereco endereco;
+
+    @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL)
+    private List<Pet> pets;
 
     public Usuario(String nome, String email, String senha, String pais){
         this.nome = nome;

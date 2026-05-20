@@ -1,4 +1,5 @@
 package com.example.demo.models.entities;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Endereco {
     private String cep;
     @OneToOne
     @JoinColumn(name = "usuario_id", unique = true)
+    @JsonIgnore
     private Usuario usuario;
 
 

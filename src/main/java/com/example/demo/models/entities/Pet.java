@@ -1,6 +1,7 @@
 package com.example.demo.models.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,8 @@ public class Pet {
 
     private String nome;
     private int idade;
-    private Long donoId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Usuario dono;
 }
