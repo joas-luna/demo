@@ -1,6 +1,7 @@
 package com.example.demo.user;
 
-import com.example.demo.user.model.UserEntity;
+import com.example.demo.user.model.dto.responses.UserResponseDTO;
+import com.example.demo.user.model.entities.UserEntity;
 import com.example.demo.user.model.dto.requests.UserRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,9 @@ public class UserService {
             return ResponseEntity.status(204).build();
         }
 
-        return ResponseEntity.status(200).body(allUsers);
+        List<UserResponseDTO> allUsersDTOs = userMapper.toUserResponseDTOList(allUsers);
+
+        return ResponseEntity.status(200).body(allUsersDTOs);
     }
 
     public ResponseEntity<?> getById(Long id) {
@@ -82,6 +85,22 @@ public class UserService {
         userRepository.deleteById(id);
 
         if(userRepository.findById(id).isPresent()) {
+            return ResponseEntity.status(500).build();
+        }
+
+        return ResponseEntity.status(204).build();
+    }
+
+    public ResponseEntity<?> deleteAll() {
+        List<UserEntity> allUsers = userRepository.findAll();
+
+        if(allUsers.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        userRepository.deleteAll();
+
+        if(!userRepository.findAll().isEmpty()) {
             return ResponseEntity.status(500).build();
         }
 

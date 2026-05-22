@@ -37,6 +37,11 @@ public class UsereController {
         return userService.patch(id, userRequestDTO);
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deletarTodosOsUsuarios() {
+        return userService.deleteAll();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletarUsuarioPorId(@PathVariable Long id) {
         return userService.deleteById(id);

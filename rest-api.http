@@ -1,0 +1,66 @@
+GET http://localhost:8081/users
+Accept: application/json
+
+<> 2026-05-22T203841.200.json
+<> 2026-05-22T202452.200.json
+<> 2026-05-22T195524.200.json
+<> 2026-05-22T194934.200.json
+<> 2026-05-22T194844.200.json
+
+###
+GET http://localhost:8081/users/7
+Accept: application/json
+
+<> 2026-05-22T194918.200.json
+<> 2026-05-22T194900.200.json
+
+###
+POST http://localhost:8081/users
+Content-Type: application/json
+
+{
+  "nome": "user3",
+  "dataDeNascimento": "2000-10-09",
+  "pais": "user3country",
+  "email": "user4569email",
+  "senha": "user0password"
+}
+
+<> 2026-05-22T204524.200.json
+<> 2026-05-22T194759.200.json
+<> 2026-05-22T194757.200.json
+<> 2026-05-22T194755.200.json
+<> 2026-05-22T194747.200.json
+<> 2026-05-22T194716.200.json
+<> 2026-05-22T194653.200.json
+<> 2026-05-22T194344.200.json
+###
+PUT http://localhost:8081/users/4
+Content-Type: application/json
+
+{
+  "nome": "nomegenerico",
+  "dataDeNascimento": "2000-01-01",
+  "pais": "",
+  "email": "emailgenerico",
+  "senha": "senha"
+}
+
+<> 2026-05-22T203943.200.json
+<> 2026-05-22T203932.200.json
+<> 2026-05-22T203822.200.json
+###
+PATCH http://localhost:8081/users/4
+Content-Type: application/json
+
+{
+  "dataDeNascimento": "2012-01-01"
+}
+
+<> 2026-05-22T204338.200.json
+
+###
+DELETE http://localhost:8081/users/8
+
+###
+DELETE http://localhost:8081/users
