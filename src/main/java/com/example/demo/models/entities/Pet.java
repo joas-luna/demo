@@ -1,6 +1,7 @@
 package com.example.demo.models.entities;
 
 
+import com.example.demo.models.dto.PetDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,9 +19,13 @@ public class Pet {
     private Long id;
 
     private String nome;
-    private int idade;
+    private String tipo;
+    private Integer idade;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario dono;
+
+    public PetDTO toDTO() {
+        return new PetDTO(nome, idade, tipo);
+    }
 }

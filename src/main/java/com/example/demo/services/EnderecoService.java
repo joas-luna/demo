@@ -4,9 +4,9 @@ import com.example.demo.models.dto.EnderecoDTO;
 import com.example.demo.models.entities.Endereco;
 import com.example.demo.models.entities.Usuario;
 import com.example.demo.repositories.EnderecoRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +19,8 @@ public class EnderecoService {
         if (enderecoRepository.existsByUsuarioId(usuarioId)) {
             throw new RuntimeException("Usuario ja possui um endereco cadastrado");
         }
-        Usuario usuario = usuarioService.obtemUsuarioPorId(usuarioId);
-        Endereco endereco = new Endereco(
-                dto.rua(), dto.numero(), dto.bairro(),
+        Usuario usuario = usuarioService.encontraUsuarioPorId(usuarioId);
+        Endereco endereco = new Endereco(dto.rua(), dto.numero(), dto.bairro(),
                 dto.cidade(), dto.estado(), dto.cep(), usuario);
         return enderecoRepository.save(endereco);
     }
@@ -50,4 +49,3 @@ public class EnderecoService {
         enderecoRepository.deleteById(endereco.getId());
     }
 }
-

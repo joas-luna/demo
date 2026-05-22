@@ -1,4 +1,5 @@
 package com.example.demo.models.entities;
+import com.example.demo.models.dto.EnderecoDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,5 +37,9 @@ public class Endereco {
         this.estado = estado;
         this.cep = cep;
         this.usuario = usuario;
+    }
+
+    public EnderecoDTO toDTO() {
+        return new EnderecoDTO(rua, numero, bairro, cidade, estado, cep);
     }
 }

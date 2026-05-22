@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/usuarios/{usuarioId}/endereco")
 @RequiredArgsConstructor
 public class EnderecoController {
-
     private final EnderecoService enderecoService;
 
     @PostMapping
-    public ResponseEntity<?> criar(@PathVariable Long usuarioId,
-                                   @RequestBody EnderecoDTO dto) {
+    public ResponseEntity<?> criar(@PathVariable Long usuarioId, @RequestBody EnderecoDTO dto) {
         try {
-            Endereco endereco = enderecoService.criar(usuarioId, dto);
-            return ResponseEntity.status(201).body(endereco);
+            return ResponseEntity.status(201).body(enderecoService.criar(usuarioId, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
@@ -28,19 +25,16 @@ public class EnderecoController {
     @GetMapping
     public ResponseEntity<?> buscar(@PathVariable Long usuarioId) {
         try {
-            Endereco endereco = enderecoService.buscarPorUsuario(usuarioId);
-            return ResponseEntity.ok(endereco);
+            return ResponseEntity.ok(enderecoService.buscarPorUsuario(usuarioId));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @PutMapping
-    public ResponseEntity<?> atualizar(@PathVariable Long usuarioId,
-                                       @RequestBody EnderecoDTO dto) {
+    public ResponseEntity<?> atualizar(@PathVariable Long usuarioId, @RequestBody EnderecoDTO dto) {
         try {
-            Endereco endereco = enderecoService.atualizar(usuarioId, dto);
-            return ResponseEntity.ok(endereco);
+            return ResponseEntity.ok(enderecoService.atualizar(usuarioId, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -56,4 +50,3 @@ public class EnderecoController {
         }
     }
 }
-

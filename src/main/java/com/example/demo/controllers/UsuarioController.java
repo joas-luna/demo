@@ -16,22 +16,19 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<?> criaUsuario(@RequestBody UsuarioDTO usuarioDTO){
-        Usuario usuarioCriado = usuarioService.criaUsuario(usuarioDTO);
-        return ResponseEntity.status(201).body(usuarioCriado);
+    public ResponseEntity<?> criaUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        return ResponseEntity.status(201).body(usuarioService.criaUsuario(usuarioDTO));
     }
 
     @GetMapping
-    public ResponseEntity<?> listarUsuarios(){
-        List<Usuario> usuarios = usuarioService.listarUsuarios();
-        return ResponseEntity.status(200).body(usuarios);
+    public ResponseEntity<?> listarUsuarios() {
+        return ResponseEntity.ok(usuarioService.listarUsuarios());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> encontraUsuario(@PathVariable Long id) {
         try {
-            Usuario usuario = usuarioService.obtemUsuarioPorId(id);
-            return ResponseEntity.status(200).body(usuario);
+            return ResponseEntity.ok(usuarioService.obtemUsuarioPorId(id));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -41,7 +38,7 @@ public class UsuarioController {
     public ResponseEntity<?> deletaUsuario(@PathVariable Long id) {
         try {
             usuarioService.removeUsuarioPorId(id);
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -49,10 +46,9 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizaUsuario(@PathVariable Long id,
-                                             @RequestBody UsuarioDTO usuarioDTO) {
+                                              @RequestBody UsuarioDTO usuarioDTO) {
         try {
-            Usuario usuarioAtualizado = usuarioService.atualizaUsuario(id, usuarioDTO);
-            return ResponseEntity.status(200).body(usuarioAtualizado);
+            return ResponseEntity.ok(usuarioService.atualizaUsuario(id, usuarioDTO));
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }

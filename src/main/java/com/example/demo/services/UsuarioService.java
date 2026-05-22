@@ -18,11 +18,11 @@ public class UsuarioService {
 
     public Usuario criaUsuario(UsuarioDTO usuarioDTO) {
         Usuario usuario = new Usuario(
-                usuarioDTO.getNome(),
-                usuarioDTO.getEmail(),
-                usuarioDTO.getSenha(),
-                usuarioDTO.getPais());
-        usuarioRepository.save(usuario); //INSERT INTO usuarios...
+                usuarioDTO.nome(),
+                usuarioDTO.email(),
+                usuarioDTO.senha(),
+                usuarioDTO.pais());
+        usuarioRepository.save(usuario);
         log.info("Usuário de id {} criado com sucesso", usuario.getId());
         return usuario;
     }
@@ -31,38 +31,33 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario obtemUsuarioPorId(Long id) {
+    public Usuario encontraUsuarioPorId(Long id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isEmpty()) {
             String mensagem = "Usuário de id " + id + " não encontrado";
             log.error(mensagem);
             throw new RuntimeException(mensagem);
-        } else {
-            log.info("Usuário de id {} encontrado", id);
-            return usuarioOpt.get();
         }
+        log.info("Usuário de id {} encontrado", id);
+        return usuarioOpt.get();
+    }
+
+    public UsuarioDTO obtemUsuarioPorId(Long id) {
+        return encontraUsuarioPorId(id).toDTO();
     }
 
     public void removeUsuarioPorId(Long id) {
-        Usuario usuario = obtemUsuarioPorId(id);
+        Usuario usuario = encontraUsuarioPorId(id);
         usuarioRepository.delete(usuario);
         log.info("Usuário de id {} removido com sucesso", id);
     }
 
     public Usuario atualizaUsuario(Long id, UsuarioDTO dadosParaAtualizar) {
-        Usuario usuarioExistente = obtemUsuarioPorId(id);
-        if (dadosParaAtualizar.getNome() != null && !dadosParaAtualizar.getNome().equals(usuarioExistente.getNome())) {
-            usuarioExistente.setNome(dadosParaAtualizar.getNome());
-        }
-        if (dadosParaAtualizar.getEmail() != null && !dadosParaAtualizar.getEmail().equals(usuarioExistente.getEmail())) {
-            usuarioExistente.setEmail(dadosParaAtualizar.getEmail());
-        }
-        if (dadosParaAtualizar.getSenha() != null && !dadosParaAtualizar.getSenha().equals(usuarioExistente.getSenha())) {
-            usuarioExistente.setSenha(dadosParaAtualizar.getSenha());
-        }
-        if (dadosParaAtualizar.getPais() != null && !dadosParaAtualizar.getPais().equals(usuarioExistente.getPais())) {
-            usuarioExistente.setPais(dadosParaAtualizar.getPais());
-        }
+        Usuario usuarioExistente = encontraUsuarioPorId(id);
+        if (dadosParaAtualizar.nome() != null) usuarioExistente.setNome(dadosParaAtualizar.nome());
+        if (dadosParaAtualizar.email() != null) usuarioExistente.setEmail(dadosParaAtualizar.email());
+        if (dadosParaAtualizar.senha() != null) usuarioExistente.setSenha(dadosParaAtualizar.senha());
+        if (dadosParaAtualizar.pais() != null) usuarioExistente.setPais(dadosParaAtualizar.pais());
         usuarioRepository.save(usuarioExistente);
         log.info("Usuário de id {} atualizado com sucesso", id);
         return usuarioExistente;

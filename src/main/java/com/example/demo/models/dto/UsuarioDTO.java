@@ -1,15 +1,6 @@
 package com.example.demo.models.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class UsuarioDTO {
-    private String nome;
-    private String email;
-    private String senha;
-    private String pais;
+public record UsuarioDTO(String nome, String email, String senha, String pais, EnderecoDTO endereco, List<PetDTO> pets) {
 }
