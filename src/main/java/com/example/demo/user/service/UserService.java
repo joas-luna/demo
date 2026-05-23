@@ -1,8 +1,10 @@
-package com.example.demo.user;
+package com.example.demo.user.service;
 
-import com.example.demo.user.model.dto.responses.UserResponseDTO;
-import com.example.demo.user.model.entities.UserEntity;
-import com.example.demo.user.model.dto.requests.UserRequestDTO;
+import com.example.demo.user.dto.user.response.UserResponseDTO;
+import com.example.demo.user.entity.User;
+import com.example.demo.user.dto.user.request.UserRequestDTO;
+import com.example.demo.user.mapper.UserMapper;
+import com.example.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,19 +20,19 @@ public class UserService {
     private final UserMapper userMapper;
 
     public ResponseEntity<?> getAll() {
-        List<UserEntity> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
 
         if(allUsers.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
 
-        List<UserResponseDTO> allUsersDTOs = userMapper.toUserResponseDTOList(allUsers);
+        List<UserResponseDTO> allUsersDTOs = userMapper.toResponsesDTOs(allUsers);
 
         return ResponseEntity.status(200).body(allUsersDTOs);
     }
 
     public ResponseEntity<?> getById(Long id) {
-        Optional<UserEntity> user = userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
 
         if(user.isPresent()) {
             return ResponseEntity.status(200).body(user.get());
@@ -39,12 +41,14 @@ public class UserService {
         return ResponseEntity.status(404).build();
     }
 
-    public ResponseEntity<?> post(UserRequestDTO userRequestDTO) {
-        UserEntity novoUsuario = userMapper.toUserEntity(userRequestDTO);
+    public ResponseEntity<?> post(List<UserRequestDTO> usersRequestsDTOs) {
+        List<User> newUsers = userMapper.toEntities(usersRequestsDTOs);
 
-        userRepository.save(novoUsuario);
+        List<User> savedUsers = userRepository.saveAll(newUsers);
 
-        return getById(novoUsuario.getId());
+        List<UserResponseDTO> createdUsers = userMapper.toResponsesDTOs(savedUsers);
+
+        return ResponseEntity.status(201).body(createdUsers);
     }
 
     public ResponseEntity<?> put(Long id, UserRequestDTO userRequestDTO) {
@@ -52,7 +56,7 @@ public class UserService {
             return ResponseEntity.status(404).build();
         }
 
-        UserEntity usuarioAtualizado = userMapper.toUserEntity(userRequestDTO);
+        User usuarioAtualizado = userMapper.toEntity(userRequestDTO);
 
         usuarioAtualizado.setId(id);
 
@@ -62,13 +66,13 @@ public class UserService {
     }
 
     public ResponseEntity<?> patch(Long id, UserRequestDTO userRequestDTO) {
-        Optional<UserEntity> usuario = userRepository.findById(id);
+        Optional<User> usuario = userRepository.findById(id);
 
         if(usuario.isEmpty()) {
             return ResponseEntity.status(404).build();
         }
 
-        UserEntity usuarioAtualizado = usuario.get();
+        User usuarioAtualizado = usuario.get();
 
         userMapper.setUser(userRequestDTO ,usuarioAtualizado);
 
@@ -92,7 +96,7 @@ public class UserService {
     }
 
     public ResponseEntity<?> deleteAll() {
-        List<UserEntity> allUsers = userRepository.findAll();
+        List<User> allUsers = userRepository.findAll();
 
         if(allUsers.isEmpty()) {
             return ResponseEntity.status(204).build();

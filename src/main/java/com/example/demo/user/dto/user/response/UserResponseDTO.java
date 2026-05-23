@@ -1,4 +1,4 @@
-package com.example.demo.user.model.dto.responses;
+package com.example.demo.user.dto.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

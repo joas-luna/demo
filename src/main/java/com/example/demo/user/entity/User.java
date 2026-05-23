@@ -1,4 +1,4 @@
-package com.example.demo.user.model.entities;
+package com.example.demo.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+public class User {
     @Column(nullable = false)
     private String nome;
 

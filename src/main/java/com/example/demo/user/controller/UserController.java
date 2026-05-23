@@ -1,15 +1,19 @@
-package com.example.demo.user;
+package com.example.demo.user.controller;
 
-import com.example.demo.user.model.dto.requests.UserRequestDTO;
+import com.example.demo.user.dto.user.request.UserRequestDTO;
+import com.example.demo.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-public class UsereController {
+public class UserController {
     private final UserService userService;
 
     @GetMapping
@@ -23,17 +27,17 @@ public class UsereController {
     }
 
     @PostMapping
-    public ResponseEntity<?> criarUsuario(@RequestBody UserRequestDTO userRequestDTO) {
-        return userService.post(userRequestDTO);
+    public ResponseEntity<?> criarUsuario(@Valid @RequestBody List<UserRequestDTO> userRequestDTOList) {
+        return userService.post(userRequestDTOList);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarUsuarioPorId(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> atualizarUsuarioPorId(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.put(id, userRequestDTO);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> atualizarParcialmenteUsuarioPorId(@PathVariable Long id, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<?> atualizarParcialmenteUsuarioPorId(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO) {
         return userService.patch(id, userRequestDTO);
     }
 
