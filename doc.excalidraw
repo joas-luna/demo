@@ -717,6 +717,49 @@
       "containerId": "4rYs85Egx_LFeKI-LdS-j",
       "originalText": "- criar vet\n- cadastrar consulta",
       "lineHeight": 1.25
+    },
+    {
+      "id": "quiUXLPfvQUGiWKjN3SiD",
+      "type": "freedraw",
+      "x": 585.6915878295898,
+      "y": 337.6000061035156,
+      "width": 0.0001,
+      "height": 0.0001,
+      "angle": 0,
+      "strokeColor": "#1e1e1e",
+      "backgroundColor": "#b2f2bb",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 1139620360,
+      "version": 3,
+      "versionNonce": 58801016,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1779494066111,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0.0001,
+          0.0001
+        ]
+      ],
+      "pressures": [],
+      "simulatePressure": true,
+      "lastCommittedPoint": [
+        0.0001,
+        0.0001
+      ]
     }
   ],
   "appState": {

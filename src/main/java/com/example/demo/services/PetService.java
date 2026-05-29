@@ -39,9 +39,13 @@ public class PetService {
     }
 
     public PetResponseDTO buscarPorId(Long id) {
-        Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet de id " + id + " não encontrado"));
+        Pet pet = encontrarPorId(id);
         return PetResponseDTO.from(pet);
+    }
+
+    public Pet encontrarPorId(Long id) {
+        return petRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pet de id " + id + " não encontrado"));
     }
 
     public PetResponseDTO atualizar(Long id, PetFormDTO dto) {
