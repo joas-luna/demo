@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.dto.UsuarioDTO;
+import com.example.demo.models.dto.UsuarioFormDTO;
 import com.example.demo.models.entities.Usuario;
 import com.example.demo.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<?> criaUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<?> criaUsuario(@RequestBody UsuarioFormDTO usuarioDTO) {
         return ResponseEntity.status(201).body(usuarioService.criaUsuario(usuarioDTO));
     }
 

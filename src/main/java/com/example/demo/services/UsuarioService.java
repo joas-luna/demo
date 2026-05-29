@@ -1,6 +1,7 @@
 package com.example.demo.services;
 
 import com.example.demo.models.dto.UsuarioDTO;
+import com.example.demo.models.dto.UsuarioFormDTO;
 import com.example.demo.models.entities.Usuario;
 import com.example.demo.repositories.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
-    public Usuario criaUsuario(UsuarioDTO usuarioDTO) {
+    public Usuario criaUsuario(UsuarioFormDTO usuarioDTO) {
         Usuario usuario = new Usuario(
                 usuarioDTO.nome(),
                 usuarioDTO.email(),
