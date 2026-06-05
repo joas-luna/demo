@@ -1,14 +1,11 @@
 package com.example.demo.controllers;
 
-import com.example.demo.models.dto.UsuarioDTO;
 import com.example.demo.models.dto.UsuarioFormDTO;
-import com.example.demo.models.entities.Usuario;
 import com.example.demo.services.UsuarioService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -17,7 +14,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<?> criaUsuario(@RequestBody UsuarioFormDTO usuarioDTO) {
+    public ResponseEntity<?> criaUsuario(@RequestBody @Valid UsuarioFormDTO usuarioDTO) {
         return ResponseEntity.status(201).body(usuarioService.criaUsuario(usuarioDTO));
     }
 
@@ -47,7 +44,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizaUsuario(@PathVariable Long id,
-                                              @RequestBody UsuarioDTO usuarioDTO) {
+            @RequestBody UsuarioFormDTO usuarioDTO) {
         try {
             return ResponseEntity.ok(usuarioService.atualizaUsuario(id, usuarioDTO));
         } catch (RuntimeException e) {

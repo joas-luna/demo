@@ -1,11 +1,14 @@
 package com.example.demo.controllers;
 
+import com.example.demo.models.dto.ConsultaDTO;
 import com.example.demo.models.dto.ConsultaFormDTO;
 import com.example.demo.services.ConsultaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/consultas")
@@ -23,10 +26,13 @@ public class ConsultaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
+    // /consultas?vet_id=3&data=2026-05-29
     @GetMapping
-    public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(consultaService.listarTodas());
+    public ResponseEntity<?> listar(@RequestParam(required = false) Long petId) {
+        List<ConsultaDTO> consultas = petId != null
+                ? consultaService.listarPorPet(petId)
+                : consultaService.listarTodas();
+        return ResponseEntity.ok(consultas);
     }
 
     @GetMapping("/{id}")

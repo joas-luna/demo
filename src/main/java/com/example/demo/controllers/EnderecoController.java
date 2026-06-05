@@ -1,11 +1,11 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.dto.EnderecoDTO;
-import com.example.demo.models.entities.Endereco;
 import com.example.demo.services.EnderecoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuarios/{usuarioId}/endereco")
@@ -14,7 +14,7 @@ public class EnderecoController {
     private final EnderecoService enderecoService;
 
     @PostMapping
-    public ResponseEntity<?> criar(@PathVariable Long usuarioId, @RequestBody EnderecoDTO dto) {
+    public ResponseEntity<?> criar(@PathVariable Long usuarioId, @Valid @RequestBody EnderecoDTO dto) {
         try {
             return ResponseEntity.status(201).body(enderecoService.criar(usuarioId, dto));
         } catch (RuntimeException e) {

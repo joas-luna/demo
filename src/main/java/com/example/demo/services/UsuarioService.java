@@ -17,7 +17,14 @@ import java.util.Optional;
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
+    public boolean usuarioComEsteEmailJaExiste(String email){
+        Optional<Usuario> possivelUsuario = usuarioRepository.findByEmail(email);
+        return possivelUsuario.isPresent();
+    }
     public Usuario criaUsuario(UsuarioFormDTO usuarioDTO) {
+        if (usuarioComEsteEmailJaExiste(usuarioDTO.email())){
+            throw new IllegalArgumentException("Já existe um usuário cadastrado com o email " + usuarioDTO.email());
+        }
         Usuario usuario = new Usuario(
                 usuarioDTO.nome(),
                 usuarioDTO.email(),
@@ -53,12 +60,16 @@ public class UsuarioService {
         log.info("Usuário de id {} removido com sucesso", id);
     }
 
-    public Usuario atualizaUsuario(Long id, UsuarioDTO dadosParaAtualizar) {
+    public Usuario atualizaUsuario(Long id, UsuarioFormDTO dadosParaAtualizar) {
         Usuario usuarioExistente = encontraUsuarioPorId(id);
-        if (dadosParaAtualizar.nome() != null) usuarioExistente.setNome(dadosParaAtualizar.nome());
-        if (dadosParaAtualizar.email() != null) usuarioExistente.setEmail(dadosParaAtualizar.email());
-        if (dadosParaAtualizar.senha() != null) usuarioExistente.setSenha(dadosParaAtualizar.senha());
-        if (dadosParaAtualizar.pais() != null) usuarioExistente.setPais(dadosParaAtualizar.pais());
+        if (dadosParaAtualizar.nome() != null)
+            usuarioExistente.setNome(dadosParaAtualizar.nome());
+        if (dadosParaAtualizar.email() != null)
+            usuarioExistente.setEmail(dadosParaAtualizar.email());
+        if (dadosParaAtualizar.senha() != null)
+            usuarioExistente.setSenha(dadosParaAtualizar.senha());
+        if (dadosParaAtualizar.pais() != null)
+            usuarioExistente.setPais(dadosParaAtualizar.pais());
         usuarioRepository.save(usuarioExistente);
         log.info("Usuário de id {} atualizado com sucesso", id);
         return usuarioExistente;

@@ -58,8 +58,7 @@ public class ConsultaService {
                 consulta.getVeterinario().getId(),
                 consulta.getPet().getId(),
                 consulta.getDataHora(),
-                consulta.getId()
-        );
+                consulta.getId());
 
         return consultaRepository.save(consulta).toDTO();
     }
@@ -73,10 +72,16 @@ public class ConsultaService {
     private void validaDuplicidade(Long veterinarioId, Long petId, LocalDateTime dataHora, Long idAtual) {
         boolean existe = (idAtual == null)
                 ? consultaRepository.existsByVeterinarioIdAndPetIdAndDataHora(veterinarioId, petId, dataHora)
-                : consultaRepository.existsByVeterinarioIdAndPetIdAndDataHoraAndIdNot(veterinarioId, petId, dataHora, idAtual);
+                : consultaRepository.existsByVeterinarioIdAndPetIdAndDataHoraAndIdNot(veterinarioId, petId, dataHora,
+                        idAtual);
 
         if (existe) {
             throw new IllegalStateException("Ja existe consulta para este veterinario, pet e data/hora");
         }
+    }
+
+    public List<ConsultaDTO> listarPorPet(Long petId) {
+        List<Consulta> consultas = consultaRepository.findByPetId(petId);
+        return consultas.stream().map(Consulta::toDTO).toList();
     }
 }
