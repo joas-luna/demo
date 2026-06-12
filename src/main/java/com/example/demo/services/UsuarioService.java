@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Slf4j
 @Service
@@ -44,7 +45,7 @@ public class UsuarioService {
         if (usuarioOpt.isEmpty()) {
             String mensagem = "Usuário de id " + id + " não encontrado";
             log.error(mensagem);
-            throw new RuntimeException(mensagem);
+            throw new ResourceNotFoundException(mensagem);
         }
         log.info("Usuário de id {} encontrado", id);
         return usuarioOpt.get();

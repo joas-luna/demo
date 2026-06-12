@@ -7,6 +7,7 @@ import com.example.demo.repositories.EnderecoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class EnderecoService {
 
     public Endereco criar(Long usuarioId, EnderecoDTO dto) {
         if (enderecoRepository.existsByUsuarioId(usuarioId)) {
-            throw new RuntimeException("Usuario ja possui um endereco cadastrado");
+            throw new IllegalArgumentException("Usuario ja possui um endereco cadastrado");
         }
         Usuario usuario = usuarioService.encontraUsuarioPorId(usuarioId);
         Endereco endereco = new Endereco(dto.rua(), dto.numero(), dto.bairro(),
@@ -28,7 +29,7 @@ public class EnderecoService {
     public Endereco buscarPorUsuario(Long usuarioId) {
         usuarioService.obtemUsuarioPorId(usuarioId);
         return enderecoRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ResourceNotFoundException(
                         "Endereco nao encontrado para o usuario " + usuarioId));
     }
 

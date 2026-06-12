@@ -10,11 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +42,7 @@ class ApiE2ETest {
                 Map.of(
                         "nome", "Ana",
                         "email", "ana@example.com",
-                        "senha", "123456",
+                        "senha", "12345678",
                         "pais", "Brasil"
                 )
         );
@@ -102,7 +100,7 @@ class ApiE2ETest {
                 Map.of(
                         "nome", "Carlos",
                         "email", "carlos@example.com",
-                        "senha", "123456",
+                        "senha", "12345678",
                         "pais", "Brasil"
                 )
         );
@@ -158,7 +156,7 @@ class ApiE2ETest {
                 Map.of(
                         "nome", "Maria",
                         "email", "maria@example.com",
-                        "senha", "123456",
+                        "senha", "12345678",
                         "pais", "Brasil"
                 )
         );
@@ -282,6 +280,19 @@ class ApiE2ETest {
         assertEquals(HttpStatus.NOT_FOUND.value(), buscarVeterinarioAposDelete.statusCode());
     }
 
+    @Test
+    void swaggerEndpointsDisponiveis() {
+        HttpResult openApiDocs = request("GET", "/v3/api-docs", null);
+        assertEquals(HttpStatus.OK.value(), openApiDocs.statusCode());
+        assertEquals("3.1.0", openApiDocs.body().get("openapi").asText());
+        assertNotNull(openApiDocs.body().get("paths").get("/usuarios"));
+        assertNotNull(openApiDocs.body().get("paths").get("/pets"));
+        assertNotNull(openApiDocs.body().get("paths").get("/consultas"));
+
+        HttpResult swaggerUi = request("GET", "/swagger-ui/index.html", null);
+        assertEquals(HttpStatus.OK.value(), swaggerUi.statusCode());
+    }
+
     private HttpResult request(String method, String path, Object body) {
         try {
             HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(baseUrl + path))
@@ -311,10 +322,6 @@ class ApiE2ETest {
     }
 
     private record HttpResult(int statusCode, JsonNode body) {
-    }
-
-    private String urlEncode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,12 +38,12 @@ public class ConsultaService {
     public ConsultaDTO buscarPorId(Long id) {
         return consultaRepository.findById(id)
                 .map(Consulta::toDTO)
-                .orElseThrow(() -> new RuntimeException("Consulta de id " + id + " nao encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta de id " + id + " nao encontrada"));
     }
 
     public ConsultaDTO atualizar(Long id, ConsultaFormDTO dto) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta de id " + id + " nao encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta de id " + id + " nao encontrada"));
 
         if (dto.veterinarioId() != null) {
             consulta.setVeterinario(veterinarioService.encontrarPorId(dto.veterinarioId()));
@@ -65,7 +66,7 @@ public class ConsultaService {
 
     public void deletar(Long id) {
         Consulta consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta de id " + id + " nao encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta de id " + id + " nao encontrada"));
         consultaRepository.delete(consulta);
     }
 

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Slf4j
 @Service
@@ -45,12 +46,12 @@ public class PetService {
 
     public Pet encontrarPorId(Long id) {
         return petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet de id " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pet de id " + id + " não encontrado"));
     }
 
     public PetResponseDTO atualizar(Long id, PetFormDTO dto) {
         Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet de id " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pet de id " + id + " não encontrado"));
         if (dto.nome() != null) pet.setNome(dto.nome());
         if (dto.tipo() != null) pet.setTipo(dto.tipo());
         if (dto.idade() != null) pet.setIdade(dto.idade());
@@ -63,7 +64,7 @@ public class PetService {
 
     public void deletar(Long id) {
         Pet pet = petRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pet de id " + id + " não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Pet de id " + id + " não encontrado"));
         petRepository.delete(pet);
         log.info("Pet id {} deletado", id);
     }

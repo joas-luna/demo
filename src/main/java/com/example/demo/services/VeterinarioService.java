@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class VeterinarioService {
 
     public Veterinario encontrarPorId(Long id) {
         return veterinarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Veterinario de id " + id + " nao encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Veterinario de id " + id + " nao encontrado"));
     }
 
     public Veterinario cadastrar(VeterinarioDTO veterinarioDTO) {
