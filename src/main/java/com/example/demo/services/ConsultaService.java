@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.models.dto.ConsultaResumoDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -84,5 +87,44 @@ public class ConsultaService {
     public List<ConsultaDTO> listarPorPet(Long petId) {
         List<Consulta> consultas = consultaRepository.findByPetId(petId);
         return consultas.stream().map(Consulta::toDTO).toList();
+    }
+
+    public ConsultaResumoDTO obterResumo() {
+        List<Consulta> consultas = consultaRepository.findAll();
+        //FAIL FAST
+        if (consultas.isEmpty()) {
+            throw new ResourceNotFoundException("Nao ha consultas");
+        }
+        int totalConsultas = consultas.size();
+        int consultasCachorros = 0;
+        int consultasGatos = 0;
+        int somaIdades = 0;
+        Set<Pet> petsProcessados = new HashSet<>();
+
+        for (Consulta consulta : consultas) {
+            Pet pet = consulta.getPet();
+            if (pet != null) {
+                String tipo = pet.getTipo();
+                if (tipo != null) {
+                    if (tipo.equalsIgnoreCase("Cachorro") || tipo.equalsIgnoreCase("Cão")) {
+                        consultasCachorros++;
+                    } else if (tipo.equalsIgnoreCase("Gato")) {
+                        consultasGatos++;
+                    }
+                }
+
+                if (pet.getIdade() != null && !petsProcessados.contains(pet)) {
+                    somaIdades += pet.getIdade();
+                    petsProcessados.add(pet);
+                }
+            }
+        }
+
+        double idadeMedia = 0.0;
+        if (!petsProcessados.isEmpty()) {
+            idadeMedia = (double) somaIdades / petsProcessados.size();
+        }
+
+        return new ConsultaResumoDTO(totalConsultas, consultasCachorros, consultasGatos, idadeMedia);
     }
 }

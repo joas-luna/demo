@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.demo.exceptions.ResourceNotFoundException;
 
 @Slf4j
@@ -17,19 +18,24 @@ import com.example.demo.exceptions.ResourceNotFoundException;
 @RequiredArgsConstructor
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    // PasswordEncoder injetado para codificar senhas de forma segura (Adicionado)
+    private final PasswordEncoder passwordEncoder;
 
-    public boolean usuarioComEsteEmailJaExiste(String email){
+    public boolean usuarioComEsteEmailJaExiste(String email) {
         Optional<Usuario> possivelUsuario = usuarioRepository.findByEmail(email);
         return possivelUsuario.isPresent();
     }
+
     public Usuario criaUsuario(UsuarioFormDTO usuarioDTO) {
-        if (usuarioComEsteEmailJaExiste(usuarioDTO.email())){
+        if (usuarioComEsteEmailJaExiste(usuarioDTO.email())) {
             throw new IllegalArgumentException("Já existe um usuário cadastrado com o email " + usuarioDTO.email());
         }
+        // Cria o usuário com a senha já criptografada via BCrypt (Alterado)
         Usuario usuario = new Usuario(
                 usuarioDTO.nome(),
                 usuarioDTO.email(),
-                usuarioDTO.senha(),
+                // Codifica/criptografa a senha antes de salvar no banco (Alterado)
+                passwordEncoder.encode(usuarioDTO.senha()),
                 usuarioDTO.pais());
         usuarioRepository.save(usuario);
         log.info("Usuário de id {} criado com sucesso", usuario.getId());
@@ -51,6 +57,17 @@ public class UsuarioService {
         return usuarioOpt.get();
     }
 
+    public Usuario encontraUsuarioPorEmail(String email) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+        if (usuarioOpt.isEmpty()) {
+            String mensagem = "Usuário de email " + email + " não encontrado";
+            log.error(mensagem);
+            throw new ResourceNotFoundException(mensagem);
+        }
+        log.info("Usuário de email {} encontrado", email);
+        return usuarioOpt.get();
+    }
+
     public UsuarioDTO obtemUsuarioPorId(Long id) {
         return encontraUsuarioPorId(id).toDTO();
     }
@@ -68,7 +85,8 @@ public class UsuarioService {
         if (dadosParaAtualizar.email() != null)
             usuarioExistente.setEmail(dadosParaAtualizar.email());
         if (dadosParaAtualizar.senha() != null)
-            usuarioExistente.setSenha(dadosParaAtualizar.senha());
+            // Criptografa a nova senha antes de atualizar (Alterado)
+            usuarioExistente.setSenha(passwordEncoder.encode(dadosParaAtualizar.senha()));
         if (dadosParaAtualizar.pais() != null)
             usuarioExistente.setPais(dadosParaAtualizar.pais());
         usuarioRepository.save(usuarioExistente);

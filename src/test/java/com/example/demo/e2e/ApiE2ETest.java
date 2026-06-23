@@ -28,10 +28,19 @@ class ApiE2ETest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private String baseUrl;
+    private String jwtToken;
 
     @BeforeEach
     void setup() {
         baseUrl = "http://localhost:" + port;
+        jwtToken = null;
+    }
+
+    private void autenticar(String email, String senha) {
+        HttpResult login = request("POST", "/auth/login", Map.of("email", email, "senha", senha));
+        if (login.statusCode() == HttpStatus.OK.value()) {
+            this.jwtToken = login.body().get("token").asText();
+        }
     }
 
     @Test
@@ -50,6 +59,8 @@ class ApiE2ETest {
         assertEquals(HttpStatus.CREATED.value(), criarUsuario.statusCode());
         Long usuarioId = criarUsuario.body().get("id").asLong();
         assertNotNull(usuarioId);
+
+        autenticar("ana@example.com", "12345678");
 
         HttpResult criarEndereco = request(
                 "POST",
@@ -107,6 +118,8 @@ class ApiE2ETest {
 
         Long donoId = criarUsuario.body().get("id").asLong();
 
+        autenticar("carlos@example.com", "12345678");
+
         HttpResult criarPet = request(
                 "POST",
                 "/pets",
@@ -161,6 +174,8 @@ class ApiE2ETest {
                 )
         );
         Long donoId = criarUsuario.body().get("id").asLong();
+
+        autenticar("maria@example.com", "12345678");
 
         HttpResult criarPet = request(
                 "POST",
@@ -242,6 +257,9 @@ class ApiE2ETest {
 
     @Test
     void veterinarioFluxoCompleto() {
+        request("POST", "/usuarios", Map.of("nome", "Admin", "email", "admin@example.com", "senha", "admin123", "pais", "Brasil"));
+        autenticar("admin@example.com", "admin123");
+
         HttpResult criarVeterinario = request(
                 "POST",
                 "/veterinarios",
@@ -297,6 +315,10 @@ class ApiE2ETest {
         try {
             HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(baseUrl + path))
                     .header("Content-Type", "application/json");
+
+            if (this.jwtToken != null) {
+                builder.header("Authorization", "Bearer " + this.jwtToken);
+            }
 
             if (body == null) {
                 builder.method(method, HttpRequest.BodyPublishers.noBody());

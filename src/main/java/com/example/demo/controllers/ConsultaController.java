@@ -46,6 +46,13 @@ public class ConsultaController {
         return ResponseEntity.ok(consultas);
     }
 
+    @GetMapping("/resumo")
+    @Operation(summary = "Resumo de consultas", description = "Retorna um resumo com estatisticas das consultas")
+    @ApiResponse(responseCode = "200", description = "Resumo retornado com sucesso")
+    public ResponseEntity<?> obterResumo() {
+        return ResponseEntity.ok(consultaService.obterResumo());
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Buscar consulta por ID", description = "Retorna uma consulta pelo identificador")
     @ApiResponses(value = {
